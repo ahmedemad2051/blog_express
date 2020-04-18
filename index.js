@@ -8,14 +8,14 @@ const postsRouter = require('./routes/posts');
 
 const app = express();
 const PORT = process.env.PORT || 3000 ;
-
+const auth = require('./middleware/auth');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 
 app.use('/api/users', usersRouter);
-app.use('/api/posts', postsRouter);
+app.use('/api/posts', auth, postsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
