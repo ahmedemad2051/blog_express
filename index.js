@@ -1,7 +1,7 @@
 const createError = require('http-errors');
 const express = require('express');
 const mongoose = require('mongoose');
-
+const client = require('prom-client');
 
 const usersRouter = require('./routes/users');
 const postsRouter = require('./routes/posts');
@@ -12,6 +12,14 @@ const auth = require('./middleware/auth');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
+
+const collectDefaultMetrics = client.collectDefaultMetrics;
+const prefix = 'my_application';
+collectDefaultMetrics({ prefix });
+
+app.get('/metrics', function (req, res) {
+  res.send(client.collectDefaultMetrics.metricsList)
+})
 
 
 app.use('/api/users', usersRouter);
@@ -41,3 +49,5 @@ mongoose.connect('mongodb://localhost:27017/db',{ useUnifiedTopology: true, useN
   }).catch(() => {
     console.log('Mongodb connection failed.');
   })
+
+
