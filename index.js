@@ -18,8 +18,10 @@ const prefix = 'my_application';
 collectDefaultMetrics({ prefix });
 
 app.get('/metrics', function (req, res) {
-  res.send(client.collectDefaultMetrics.metricsList)
-})
+  res.set('Content-Type', client.register.contentType);
+  res.end(client.register.metrics());
+  });
+
 
 
 app.use('/api/users', usersRouter);
